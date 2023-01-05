@@ -1,6 +1,27 @@
 const form = document.querySelector('#book-form')
 form.addEventListener('submit', addBook)
 
+document.addEventListener('DOMContentLoaded', getBooks)
+
+function getBooks(){
+    let books // array for LS data
+    if(localStorage.getItem('books') === null){
+        books = []
+    } else {
+        books = JSON.parse(localStorage.getItem('books'))
+    }
+    books.forEach(function(book){
+        const bookRow = document.createElement('tr')
+        bookRow.innerHTML = `
+                        <td>${book[0]}</td>
+                        <td>${book[1]}</td>
+                        <td>${book[2]}</td>
+                        <td><a href="#">X</a></td>`
+        const booksTabel = document.querySelector('#books')
+        booksTabel.appendChild(bookRow)
+    } )
+}
+
 function addBook(event){
     //read user input
     const title = document.querySelector('#title').value
@@ -19,14 +40,14 @@ function addBook(event){
 
     //add task to LS
     const book = [title, author, isbn]
-    let books // array user inputs
+    let books // array for LS data
     if(localStorage.getItem('books') === null){
         books = []
     } else {
         books = JSON.parse(localStorage.getItem('books'))
     }
-    localStorage.setItem('books', JSON.stringify(books))
     books.push(book)
+    localStorage.setItem('books', JSON.stringify(books))
 
     //clear tasks
     document.querySelector('#title').value = ''
